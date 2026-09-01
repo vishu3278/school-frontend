@@ -19,8 +19,14 @@ type StudentDetail = {
   dateOfBirth?: string | null;
   gender?: string | null;
   phone?: string | null;
+  phone2?: string | null;
   email?: string | null;
   address?: string | null;
+  password?: string | null;
+  motherName?: string | null;
+  fatherName?: string | null;
+  aadharNo?: string | null;
+  religion?: string | null;
   grade: Grade;
   createdAt?: string;
   updatedAt?: string;
@@ -131,8 +137,33 @@ export default function StudentDetailPage() {
         </div>
 
         <div>
+          <p className="text-sm text-gray-500">Phone 2</p>
+          <p>{student.phone2 || "-"}</p>
+        </div>
+
+        <div>
           <p className="text-sm text-gray-500">Email</p>
           <p>{student.email || "-"}</p>
+        </div>
+
+        <div>
+          <p className="text-sm text-gray-500">Aadhar Number</p>
+          <p>{student.aadharNo || "-"}</p>
+        </div>
+
+        <div>
+          <p className="text-sm text-gray-500">Religion</p>
+          <p>{student.religion || "-"}</p>
+        </div>
+
+        <div>
+          <p className="text-sm text-gray-500">Mother's Name</p>
+          <p>{student.motherName || "-"}</p>
+        </div>
+
+        <div>
+          <p className="text-sm text-gray-500">Father's Name</p>
+          <p>{student.fatherName || "-"}</p>
         </div>
 
         <div className="md:col-span-2">

@@ -2,12 +2,15 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useAuth } from "@/lib/auth";
 
 import StudentTable, { Student } from "@/components/students/StudentTable";
 
 import { api } from "@/lib/api";
 
 export default function StudentsPage() {
+  const { hasRole } = useAuth();
+
   const [students, setStudents] = useState<Student[]>([]);
 
   const [loading, setLoading] = useState(true);
@@ -80,21 +83,22 @@ export default function StudentsPage() {
           <p className="text-gray-600">Manage school students</p>
         </div>
 
+          {hasRole("admin") && (
         <div className="flex gap-3">
-          <Link
-            href="/grades"
-            className="rounded bg-gray-200 px-4 py-2 text-gray-800"
-          >
-            Manage Grades
-          </Link>
-
+            <Link
+              href="/grades"
+              className="rounded bg-gray-200 px-4 py-2 text-gray-800"
+            >
+              Manage Grades
+            </Link>
           <Link
             href="/students/new"
             className="rounded bg-blue-600 px-4 py-2 text-white"
-          >
+            >
             Add Student
           </Link>
         </div>
+          )}
       </div>
 
       <StudentTable students={students} onDelete={deleteStudent} />

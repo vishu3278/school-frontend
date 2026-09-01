@@ -19,8 +19,14 @@ export default function StudentForm({ grades }: StudentFormProps) {
     dateOfBirth: "",
     gender: "",
     phone: "",
+    phone2: "",
     email: "",
     address: "",
+    password: "",
+    motherName: "",
+    fatherName: "",
+    aadharNo: "",
+    religion: "",
     gradeId: "",
   });
 
@@ -84,8 +90,14 @@ export default function StudentForm({ grades }: StudentFormProps) {
         dateOfBirth: "",
         gender: "",
         phone: "",
+        phone2: "",
         email: "",
         address: "",
+        password: "",
+        motherName: "",
+        fatherName: "",
+        aadharNo: "",
+        religion: "",
         gradeId: "",
       });
     } catch (error) {
@@ -108,9 +120,9 @@ export default function StudentForm({ grades }: StudentFormProps) {
           <input
             name="admissionNo"
             value={form.admissionNo}
-            onChange={handleChange}
-            required
-            className="w-full rounded border p-2"
+            readOnly
+            placeholder="Auto-generated on save"
+            className="w-full rounded border bg-gray-50 p-2 text-gray-700"
           />
         </div>
 
@@ -190,11 +202,11 @@ export default function StudentForm({ grades }: StudentFormProps) {
         </div>
 
         <div>
-          <label className="mb-1 block font-medium">Phone</label>
+          <label className="mb-1 block font-medium">Phone 2</label>
 
           <input
-            name="phone"
-            value={form.phone}
+            name="phone2"
+            value={form.phone2}
             onChange={handleChange}
             className="w-full rounded border p-2"
           />
@@ -207,6 +219,74 @@ export default function StudentForm({ grades }: StudentFormProps) {
             type="email"
             name="email"
             value={form.email}
+            onChange={handleChange}
+            className="w-full rounded border p-2"
+          />
+        </div>
+
+        <div>
+          <label className="mb-1 block font-medium">Password</label>
+
+          <input
+            type="password"
+            name="password"
+            value={form.password}
+            onChange={handleChange}
+            placeholder="Leave blank for default"
+            className="w-full rounded border p-2"
+          />
+        </div>
+
+        <div>
+          <label className="mb-1 block font-medium">Aadhar Number</label>
+
+          <input
+            name="aadharNo"
+            value={form.aadharNo}
+            onChange={handleChange}
+            className="w-full rounded border p-2"
+          />
+        </div>
+
+        <div>
+          <label className="mb-1 block font-medium">Religion</label>
+
+          <select
+            name="religion"
+            value={form.religion}
+            onChange={handleChange}
+            className="w-full rounded border p-2"
+          >
+            <option value="">Select Religion</option>
+            <option value="Hindu">Hindu</option>
+            <option value="Muslim">Muslim</option>
+            <option value="Sikh">Sikh</option>
+            <option value="Christian">Christian</option>
+            <option value="Jain">Jain</option>
+            <option value="Baudh">Baudh</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <div>
+          <label className="mb-1 block font-medium">Mother's Name</label>
+
+          <input
+            name="motherName"
+            value={form.motherName}
+            onChange={handleChange}
+            className="w-full rounded border p-2"
+          />
+        </div>
+
+        <div>
+          <label className="mb-1 block font-medium">Father's Name</label>
+
+          <input
+            name="fatherName"
+            value={form.fatherName}
             onChange={handleChange}
             className="w-full rounded border p-2"
           />
