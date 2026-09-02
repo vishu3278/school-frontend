@@ -11,6 +11,12 @@ type Grade = {
   name: string;
 };
 
+type Section = {
+  id: string;
+  name: string;
+  grade: Grade;
+};
+
 type StudentFormValues = {
   admissionNo: string;
   firstName: string;
@@ -27,6 +33,7 @@ type StudentFormValues = {
   aadharNo: string;
   religion: string;
   gradeId: string;
+  sectionId: string;
 };
 
 export default function EditStudentPage() {
@@ -50,12 +57,41 @@ export default function EditStudentPage() {
     aadharNo: "",
     religion: "",
     gradeId: "",
+    sectionId: "",
   });
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [grades, setGrades] = useState<Grade[]>([]);
+  const [sections, setSections] = useState<Section[]>([]);
+
+  useEffect(() => {
+    async function loadSections() {
+      if (!form.gradeId) {
+        setSections([]);
+        setForm((current) => ({ ...current, sectionId: "" }));
+        return;
+      }
+
+      try {
+        const sectionsData = await api<Section[]>(`/sections?gradeId=${form.gradeId}`);
+        setSections(sectionsData);
+        setForm((current) => ({
+          ...current,
+          sectionId:
+            current.sectionId &&
+            sectionsData.some((section) => section.id === current.sectionId)
+              ? current.sectionId
+              : "",
+        }));
+      } catch {
+        setSections([]);
+      }
+    }
+
+    loadSections();
+  }, [form.gradeId]);
 
   useEffect(() => {
     async function loadData() {
@@ -66,7 +102,7 @@ export default function EditStudentPage() {
 
       try {
         const [studentData, gradesData] = await Promise.all([
-          api<{ id: string; admissionNo: string; firstName: string; lastName: string; dateOfBirth?: string | null; gender?: string | null; phone?: string | null; phone2?: string | null; email?: string | null; address?: string | null; password?: string | null; motherName?: string | null; fatherName?: string | null; aadharNo?: string | null; religion?: string | null; grade: Grade }>(`/students/${id}`),
+          api<{ id: string; admissionNo: string; firstName: string; lastName: string; dateOfBirth?: string | null; gender?: string | null; phone?: string | null; phone2?: string | null; email?: string | null; address?: string | null; password?: string | null; motherName?: string | null; fatherName?: string | null; aadharNo?: string | null; religion?: string | null; grade: Grade; section?: Section }>(`/students/${id}`),
           api<Grade[]>("/grades"),
         ]);
 
@@ -87,6 +123,7 @@ export default function EditStudentPage() {
           aadharNo: studentData.aadharNo ?? "",
           religion: studentData.religion ?? "",
           gradeId: studentData.grade?.id ?? "",
+          sectionId: studentData.section?.id ?? "",
         });
       } catch (err) {
         setError(
@@ -162,7 +199,7 @@ export default function EditStudentPage() {
       )}
 
       <form onSubmit={handleSubmit} className="max-w-4xl space-y-6">
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-3">
           <div>
             <label className="mb-1 block font-medium">Admission Number</label>
             <input
@@ -186,6 +223,25 @@ export default function EditStudentPage() {
               {grades.map((grade) => (
                 <option key={grade.id} value={grade.id}>
                   {grade.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="mb-1 block font-medium">Section</label>
+            <select
+              name="sectionId"
+              value={form.sectionId}
+              onChange={handleChange}
+              required
+              disabled={!form.gradeId || sections.length === 0}
+              className="w-full rounded border p-2 disabled:bg-gray-100"
+            >
+              <option value="">{form.gradeId ? "Select Section" : "Select Grade first"}</option>
+              {sections.map((section) => (
+                <option key={section.id} value={section.id}>
+                  {section.name}
                 </option>
               ))}
             </select>

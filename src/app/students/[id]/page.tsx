@@ -11,6 +11,11 @@ type Grade = {
   name: string;
 };
 
+type Section = {
+  id: string;
+  name: string;
+};
+
 type StudentDetail = {
   id: string;
   admissionNo: string;
@@ -28,6 +33,7 @@ type StudentDetail = {
   aadharNo?: string | null;
   religion?: string | null;
   grade: Grade;
+  section?: Section;
   createdAt?: string;
   updatedAt?: string;
 };
@@ -108,7 +114,7 @@ export default function StudentDetailPage() {
         </Link>
       </div>
 
-      <div className="grid gap-6 rounded border bg-white p-6 shadow-sm md:grid-cols-2">
+      <div className="grid gap-6 rounded border bg-white p-6 shadow-sm md:grid-cols-3">
         <div>
           <p className="text-sm text-gray-500">Full name</p>
           <p className="text-lg font-semibold">
@@ -119,6 +125,11 @@ export default function StudentDetailPage() {
         <div>
           <p className="text-sm text-gray-500">Grade</p>
           <p className="text-lg font-semibold">{student.grade?.name}</p>
+        </div>
+
+        <div>
+          <p className="text-sm text-gray-500">Section</p>
+          <p className="text-lg font-semibold">{student.section?.name || "-"}</p>
         </div>
 
         <div>
