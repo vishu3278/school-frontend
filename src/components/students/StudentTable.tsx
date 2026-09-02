@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useAuth } from "@/lib/auth";
 
 type Grade = {
   id: string;
@@ -25,6 +26,7 @@ export default function StudentTable({
   students,
   onDelete,
 }: StudentTableProps) {
+  const { hasRole } = useAuth();
   return (
     <div className="overflow-x-auto rounded-lg border">
       <table className="w-full text-left">
@@ -63,20 +65,23 @@ export default function StudentTable({
                   >
                     View
                   </Link>
+                  {hasRole("admin") && (
+                    <>
+                      <Link
+                        href={`/students/${student.id}/edit`}
+                        className="text-green-600"
+                        >
+                        Edit
+                      </Link>
 
-                  <Link
-                    href={`/students/${student.id}/edit`}
-                    className="text-green-600"
-                  >
-                    Edit
-                  </Link>
-
-                  <button
-                    onClick={() => onDelete(student.id)}
-                    className="text-red-600"
-                  >
-                    Delete
-                  </button>
+                      <button
+                      onClick={() => onDelete(student.id)}
+                      className="text-red-600"
+                      >
+                        Delete
+                      </button>
+                    </>
+                  )}
                 </div>
               </td>
             </tr>

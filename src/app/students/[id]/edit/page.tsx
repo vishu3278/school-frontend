@@ -18,8 +18,14 @@ type StudentFormValues = {
   dateOfBirth: string;
   gender: string;
   phone: string;
+  phone2: string;
   email: string;
   address: string;
+  password: string;
+  motherName: string;
+  fatherName: string;
+  aadharNo: string;
+  religion: string;
   gradeId: string;
 };
 
@@ -35,8 +41,14 @@ export default function EditStudentPage() {
     dateOfBirth: "",
     gender: "",
     phone: "",
+    phone2: "",
     email: "",
     address: "",
+    password: "",
+    motherName: "",
+    fatherName: "",
+    aadharNo: "",
+    religion: "",
     gradeId: "",
   });
 
@@ -54,7 +66,7 @@ export default function EditStudentPage() {
 
       try {
         const [studentData, gradesData] = await Promise.all([
-          api<{ id: string; admissionNo: string; firstName: string; lastName: string; dateOfBirth?: string | null; gender?: string | null; phone?: string | null; email?: string | null; address?: string | null; grade: Grade }>(`/students/${id}`),
+          api<{ id: string; admissionNo: string; firstName: string; lastName: string; dateOfBirth?: string | null; gender?: string | null; phone?: string | null; phone2?: string | null; email?: string | null; address?: string | null; password?: string | null; motherName?: string | null; fatherName?: string | null; aadharNo?: string | null; religion?: string | null; grade: Grade }>(`/students/${id}`),
           api<Grade[]>("/grades"),
         ]);
 
@@ -66,8 +78,14 @@ export default function EditStudentPage() {
           dateOfBirth: studentData.dateOfBirth ?? "",
           gender: studentData.gender ?? "",
           phone: studentData.phone ?? "",
+          phone2: studentData.phone2 ?? "",
           email: studentData.email ?? "",
           address: studentData.address ?? "",
+          password: studentData.password ?? "",
+          motherName: studentData.motherName ?? "",
+          fatherName: studentData.fatherName ?? "",
+          aadharNo: studentData.aadharNo ?? "",
+          religion: studentData.religion ?? "",
           gradeId: studentData.grade?.id ?? "",
         });
       } catch (err) {
@@ -143,16 +161,15 @@ export default function EditStudentPage() {
         <div className="mb-4 rounded bg-red-100 p-4 text-red-700">{error}</div>
       )}
 
-      <form onSubmit={handleSubmit} className="max-w-3xl space-y-6">
+      <form onSubmit={handleSubmit} className="max-w-4xl space-y-6">
         <div className="grid gap-4 md:grid-cols-2">
           <div>
             <label className="mb-1 block font-medium">Admission Number</label>
             <input
               name="admissionNo"
               value={form.admissionNo}
-              onChange={handleChange}
-              required
-              className="w-full rounded border p-2"
+              readOnly
+              className="w-full rounded border bg-gray-50 p-2 text-gray-700"
             />
           </div>
 
@@ -233,6 +250,16 @@ export default function EditStudentPage() {
           </div>
 
           <div>
+            <label className="mb-1 block font-medium">Phone 2</label>
+            <input
+              name="phone2"
+              value={form.phone2}
+              onChange={handleChange}
+              className="w-full rounded border p-2"
+            />
+          </div>
+
+          <div>
             <label className="mb-1 block font-medium">Email</label>
             <input
               type="email"
@@ -241,6 +268,66 @@ export default function EditStudentPage() {
               onChange={handleChange}
               className="w-full rounded border p-2"
             />
+          </div>
+
+          <div>
+            <label className="mb-1 block font-medium">Password</label>
+            <input
+              type="password"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              className="w-full rounded border p-2"
+            />
+          </div>
+
+          <div>
+            <label className="mb-1 block font-medium">Mother's Name</label>
+            <input
+              name="motherName"
+              value={form.motherName}
+              onChange={handleChange}
+              className="w-full rounded border p-2"
+            />
+          </div>
+
+          <div>
+            <label className="mb-1 block font-medium">Father's Name</label>
+            <input
+              name="fatherName"
+              value={form.fatherName}
+              onChange={handleChange}
+              className="w-full rounded border p-2"
+            />
+          </div>
+
+          <div>
+            <label className="mb-1 block font-medium">Aadhar Number</label>
+            <input
+              name="aadharNo"
+              value={form.aadharNo}
+              onChange={handleChange}
+              className="w-full rounded border p-2"
+            />
+          </div>
+
+          <div>
+            <label className="mb-1 block font-medium">Religion</label>
+            <select
+              name="religion"
+              value={form.religion}
+              onChange={handleChange}
+              className="w-full rounded border p-2"
+            >
+              <option value="">Select Religion</option>
+              <option value="Hindu">Hindu</option>
+              <option value="Muslim">Muslim</option>
+              <option value="Sikh">Sikh</option>
+              <option value="Christian">Christian</option>
+              <option value="Jain">Jain</option>
+              <option value="Baudh">Baudh</option>
+              <option value="Other">Other</option>
+            </select>
           </div>
         </div>
 
