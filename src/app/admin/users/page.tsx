@@ -14,6 +14,14 @@ export type User = {
   email: string;
   role: "admin" | "teacher" | "student" | "staff";
   isActive: boolean;
+  phone?: string | null;
+  highestEducation?: string | null;
+  institution?: string | null;
+  yearOfPassing?: string | null;
+  address?: string | null;
+  maritalStatus?: string | null;
+  gender?: string | null;
+  photo?: string | null;
 };
 
 const emptyForm = {
@@ -22,6 +30,14 @@ const emptyForm = {
   email: "",
   password: "",
   role: "student",
+  phone: "",
+  highestEducation: "",
+  institution: "",
+  yearOfPassing: "",
+  address: "",
+  maritalStatus: "",
+  gender: "",
+  photo: "",
 };
 
 export default function AdminUsersPage() {
@@ -32,6 +48,7 @@ export default function AdminUsersPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [isCreateFormCollapsed, setIsCreateFormCollapsed] = useState(true);
 
   useEffect(() => {
     if (!user || !hasRole("admin")) {
@@ -68,7 +85,9 @@ export default function AdminUsersPage() {
 
     try {
       const payload = {
-        ...form,
+        ...Object.fromEntries(
+          Object.entries(form).filter(([, value]) => value.trim() !== ""),
+        ),
         password: form.password.trim(),
       };
 
@@ -126,13 +145,24 @@ export default function AdminUsersPage() {
           <p className="text-gray-600">Create and manage role-based accounts</p>
         </div>
 
-        <Link href="/admin" className="rounded bg-gray-200 px-4 py-2">
-          Back to admin
-        </Link>
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={() => setIsCreateFormCollapsed((collapsed) => !collapsed)}
+            aria-expanded={!isCreateFormCollapsed}
+            className="rounded bg-blue-600 px-4 py-2 text-white"
+          >
+            {isCreateFormCollapsed ? "Create user" : "Hide form"}
+          </button>
+          <Link href="/admin" className="rounded bg-gray-200 px-4 py-2">
+            Back to admin
+          </Link>
+        </div>
       </div>
 
-      <div className="mb-6 rounded border bg-white p-4 shadow-sm">
-        <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-2">
+      {!isCreateFormCollapsed && (
+        <div className="mb-6 rounded border bg-white p-4 shadow-sm">
+          <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-2">
           <div>
             <label className="mb-1 block font-medium">First name</label>
             <input
@@ -189,6 +219,58 @@ export default function AdminUsersPage() {
             </select>
           </div>
 
+          <div>
+            <label className="mb-1 block font-medium">Phone</label>
+            <input name="phone" value={form.phone} onChange={(event) => setForm((current) => ({ ...current, phone: event.target.value }))} className="w-full rounded border p-2" inputMode="numeric" maxLength={10} pattern="\d{10}" title="Enter exactly 10 digits" />
+          </div>
+
+          <div>
+            <label className="mb-1 block font-medium">Gender</label>
+            <select name="gender" value={form.gender} onChange={(event) => setForm((current) => ({ ...current, gender: event.target.value }))} className="w-full rounded border p-2">
+              <option value="">Select gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="mb-1 block font-medium">Highest education</label>
+            <input name="highestEducation" value={form.highestEducation} onChange={(event) => setForm((current) => ({ ...current, highestEducation: event.target.value }))} className="w-full rounded border p-2" />
+          </div>
+
+          <div>
+            <label className="mb-1 block font-medium">Institution / university / board / school</label>
+            <input name="institution" value={form.institution} onChange={(event) => setForm((current) => ({ ...current, institution: event.target.value }))} className="w-full rounded border p-2" />
+          </div>
+
+          <div>
+            <label className="mb-1 block font-medium">Year of passing</label>
+            <input name="yearOfPassing" value={form.yearOfPassing} onChange={(event) => setForm((current) => ({ ...current, yearOfPassing: event.target.value }))} className="w-full rounded border p-2" inputMode="numeric" maxLength={4} pattern="(?:19|20)\d{2}" title="Enter a 4-digit year starting with 19 or 20" />
+          </div>
+
+          <div>
+            <label className="mb-1 block font-medium">Marital status</label>
+            <select name="maritalStatus" value={form.maritalStatus} onChange={(event) => setForm((current) => ({ ...current, maritalStatus: event.target.value }))} className="w-full rounded border p-2">
+              <option value="">Select marital status</option>
+              <option value="Never Married">Never Married</option>
+              <option value="Currently Married">Currently Married</option>
+              <option value="Widow / Widower">Widow / Widower</option>
+              <option value="Divorced">Divorced</option>
+              <option value="Separated">Separated</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="mb-1 block font-medium">Photo URL</label>
+            <input name="photo" type="url" value={form.photo} onChange={(event) => setForm((current) => ({ ...current, photo: event.target.value }))} className="w-full rounded border p-2" />
+          </div>
+
+          <div className="md:col-span-2">
+            <label className="mb-1 block font-medium">Address</label>
+            <textarea name="address" value={form.address} onChange={(event) => setForm((current) => ({ ...current, address: event.target.value }))} className="w-full rounded border p-2" rows={3} />
+          </div>
+
           <div className="md:col-span-2">
             <button
               type="submit"
@@ -198,10 +280,11 @@ export default function AdminUsersPage() {
               {saving ? "Creating..." : "Create User"}
             </button>
           </div>
-        </form>
+          </form>
 
-        {error && <div className="mt-4 rounded bg-red-100 p-3 text-red-700">{error}</div>}
-      </div>
+          {error && <div className="mt-4 rounded bg-red-100 p-3 text-red-700">{error}</div>}
+        </div>
+      )}
 
       <div className="overflow-x-auto rounded-lg border bg-white">
         <table className="w-full text-left">
@@ -222,9 +305,11 @@ export default function AdminUsersPage() {
                 <td className="px-4 py-3 capitalize">{entry.role}</td>
                 <td className="px-4 py-3">{entry.isActive ? "Active" : "Inactive"}</td>
                 <td className="px-4 py-3">
-                  <button onClick={() => handleDelete(entry.id)} className="text-red-600">
-                    Delete
-                  </button>
+                  <div className="flex gap-3">
+                    <Link href={`/admin/users/${entry.id}`} className="text-blue-600 hover:underline">View</Link>
+                    <Link href={`/admin/users/${entry.id}/edit`} className="text-gray-700 hover:underline">Edit</Link>
+                    <button onClick={() => handleDelete(entry.id)} className="text-red-600">Delete</button>
+                  </div>
                 </td>
               </tr>
             ))}

@@ -1,11 +1,18 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { useAuth } from "@/lib/auth";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   const { user, isAuthenticated, logout, hasRole } = useAuth();
+  const router = useRouter();
+
+  function handleLogout() {
+    logout();
+    router.replace("/");
+  }
 
   return (
     <div className="min-h-screen bg-slate-100 text-slate-800">
@@ -38,7 +45,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 
                 <button
                   type="button"
-                  onClick={logout}
+                  onClick={handleLogout}
                   className="rounded-lg border border-slate-200 bg-slate-100 px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-200"
                 >
                   Logout

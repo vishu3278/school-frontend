@@ -5,10 +5,10 @@ import Link from "next/link";
 import { useAuth } from "@/lib/auth";
 
 export default function Home() {
-  const { user, isAuthenticated, logout, hasRole } = useAuth();
+  const { isAuthenticated, hasRole } = useAuth();
 
   return (
-    <main className="flex min-h-[32rem] justify-center p-8">
+    <main className="flex min-h-128 justify-center p-8">
       
         <div className="mb-4 flex items-center justify-between gap-3">
           {isAuthenticated ? (
