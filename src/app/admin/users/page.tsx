@@ -299,7 +299,7 @@ export default function AdminUsersPage() {
           </thead>
           <tbody>
             {users.map((entry) => (
-              <tr key={entry.id} className="border-t">
+              <tr key={entry.id} className={`border-t ${entry.isActive ? '' : 'bg-red-100'}`}>
                 <td className="px-4 py-3">{entry.firstName} {entry.lastName}</td>
                 <td className="px-4 py-3">{entry.email}</td>
                 <td className="px-4 py-3 capitalize">{entry.role}</td>

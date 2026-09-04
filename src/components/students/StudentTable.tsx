@@ -8,6 +8,11 @@ type Grade = {
   name: string;
 };
 
+type Section = {
+  id: string;
+  name: string;
+};
+
 export type Student = {
   id: string;
   admissionNo: string;
@@ -15,6 +20,8 @@ export type Student = {
   lastName: string;
   phone?: string | null;
   grade: Grade;
+  section: Section;
+  isActive: boolean;
 };
 
 type StudentTableProps = {
@@ -38,7 +45,11 @@ export default function StudentTable({
 
             <th className="px-4 py-3">Grade</th>
 
+            <th className="px-4 py-3">Section</th>
+
             <th className="px-4 py-3">Phone</th>
+
+            <th className="px-4 py-3">Status</th>
 
             <th className="px-4 py-3">Actions</th>
           </tr>
@@ -55,7 +66,11 @@ export default function StudentTable({
 
               <td className="px-4 py-3">{student.grade.name}</td>
 
+              <td className="px-4 py-3">{student.section?.name || "-"}</td>
+
               <td className="px-4 py-3">{student.phone || "-"}</td>
+
+              <td className="px-4 py-3">{student.isActive ? "Active" : "Inactive"}</td>
 
               <td className="px-4 py-3">
                 <div className="flex gap-3">

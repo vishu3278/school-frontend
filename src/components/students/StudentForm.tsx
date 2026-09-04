@@ -1,10 +1,18 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
+
+import { api } from "@/lib/api";
 
 type Grade = {
   id: string;
   name: string;
+};
+
+type Section = {
+  id: string;
+  name: string;
+  grade: Grade;
 };
 
 type StudentFormProps = {
@@ -12,6 +20,7 @@ type StudentFormProps = {
 };
 
 export default function StudentForm({ grades }: StudentFormProps) {
+  const [sections, setSections] = useState<Section[]>([]);
   const [form, setForm] = useState({
     admissionNo: "",
     firstName: "",
@@ -28,11 +37,39 @@ export default function StudentForm({ grades }: StudentFormProps) {
     aadharNo: "",
     religion: "",
     gradeId: "",
+    sectionId: "",
   });
 
   const [saving, setSaving] = useState(false);
 
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    async function loadSections() {
+      if (!form.gradeId) {
+        setSections([]);
+        setForm((current) => ({ ...current, sectionId: "" }));
+        return;
+      }
+
+      try {
+        const sectionsData = await api<Section[]>(`/sections?gradeId=${form.gradeId}`);
+        setSections(sectionsData);
+        setForm((current) => ({
+          ...current,
+          sectionId:
+            current.sectionId &&
+            sectionsData.some((section) => section.id === current.sectionId)
+              ? current.sectionId
+              : "",
+        }));
+      } catch {
+        setSections([]);
+      }
+    }
+
+    loadSections();
+  }, [form.gradeId]);
 
   function handleChange(
     event: React.ChangeEvent<
@@ -99,6 +136,7 @@ export default function StudentForm({ grades }: StudentFormProps) {
         aadharNo: "",
         religion: "",
         gradeId: "",
+        sectionId: "",
       });
     } catch (error) {
       setError(error instanceof Error ? error.message : "Something went wrong");
@@ -196,6 +234,29 @@ export default function StudentForm({ grades }: StudentFormProps) {
             {grades.map((grade) => (
               <option key={grade.id} value={grade.id}>
                 {grade.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <label className="mb-1 block font-medium">Section</label>
+
+          <select
+            name="sectionId"
+            value={form.sectionId}
+            onChange={handleChange}
+            required
+            disabled={!form.gradeId || sections.length === 0}
+            className="w-full rounded border p-2 disabled:bg-gray-100"
+          >
+            <option value="">
+              {form.gradeId ? "Select Section" : "Select Grade first"}
+            </option>
+
+            {sections.map((section) => (
+              <option key={section.id} value={section.id}>
+                {section.name}
               </option>
             ))}
           </select>

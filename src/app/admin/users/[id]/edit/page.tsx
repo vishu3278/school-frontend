@@ -20,12 +20,14 @@ type UserForm = {
   maritalStatus: string;
   gender: string;
   photo: string;
+  isActive: boolean;
 };
 
 const emptyForm: UserForm = {
   firstName: "", lastName: "", email: "", password: "", role: "student",
   phone: "", highestEducation: "", institution: "", yearOfPassing: "",
   address: "", maritalStatus: "", gender: "", photo: "",
+  isActive: true,
 };
 
 export default function EditUserPage() {
@@ -46,6 +48,7 @@ export default function EditUserPage() {
         highestEducation: data.highestEducation ?? "", institution: data.institution ?? "",
         yearOfPassing: data.yearOfPassing ?? "", address: data.address ?? "",
         maritalStatus: data.maritalStatus ?? "", gender: data.gender ?? "", photo: data.photo ?? "",
+        isActive: data.isActive ?? true,
       }))
       .catch((err: unknown) => setError(err instanceof Error ? err.message : "Failed to load user"))
       .finally(() => setLoading(false));
@@ -62,7 +65,7 @@ export default function EditUserPage() {
     setError("");
 
     const payload = Object.fromEntries(
-      Object.entries(form).filter(([key, value]) => key !== "password" || value.trim() !== ""),
+      Object.entries(form).filter(([key, value]) => key !== "password" || (typeof value === "string" && value.trim() !== "")),
     );
 
     try {
@@ -111,6 +114,13 @@ export default function EditUserPage() {
         <div>
           <label className="mb-1 block font-medium">New password</label>
           <input name="password" type="password" value={form.password} onChange={handleChange} className="w-full rounded border p-2" placeholder="Leave blank to keep current" />
+        </div>
+        <div>
+          <label className="mb-1 block font-medium">Status</label>
+          <select name="isActive" value={String(form.isActive)} onChange={(event) => setForm((current) => ({ ...current, isActive: event.target.value === "true" }))} className="w-full rounded border p-2">
+            <option value="true">Active</option>
+            <option value="false">Inactive</option>
+          </select>
         </div>
         <div className="md:col-span-2">
           <label className="mb-1 block font-medium">Address</label>
