@@ -34,6 +34,7 @@ type StudentFormValues = {
   religion: string;
   gradeId: string;
   sectionId: string;
+  isActive: boolean;
 };
 
 export default function EditStudentPage() {
@@ -58,6 +59,7 @@ export default function EditStudentPage() {
     religion: "",
     gradeId: "",
     sectionId: "",
+    isActive: true,
   });
 
   const [loading, setLoading] = useState(true);
@@ -102,7 +104,7 @@ export default function EditStudentPage() {
 
       try {
         const [studentData, gradesData] = await Promise.all([
-          api<{ id: string; admissionNo: string; firstName: string; lastName: string; dateOfBirth?: string | null; gender?: string | null; phone?: string | null; phone2?: string | null; email?: string | null; address?: string | null; password?: string | null; motherName?: string | null; fatherName?: string | null; aadharNo?: string | null; religion?: string | null; grade: Grade; section?: Section }>(`/students/${id}`),
+          api<{ id: string; admissionNo: string; firstName: string; lastName: string; dateOfBirth?: string | null; gender?: string | null; phone?: string | null; phone2?: string | null; email?: string | null; address?: string | null; password?: string | null; motherName?: string | null; fatherName?: string | null; aadharNo?: string | null; religion?: string | null; isActive?: boolean; grade: Grade; section?: Section }>(`/students/${id}`),
           api<Grade[]>("/grades"),
         ]);
 
@@ -124,6 +126,7 @@ export default function EditStudentPage() {
           religion: studentData.religion ?? "",
           gradeId: studentData.grade?.id ?? "",
           sectionId: studentData.section?.id ?? "",
+          isActive: studentData.isActive ?? true,
         });
       } catch (err) {
         setError(
@@ -335,6 +338,19 @@ export default function EditStudentPage() {
               onChange={handleChange}
               className="w-full rounded border p-2"
             />
+          </div>
+
+          <div>
+            <label className="mb-1 block font-medium">Status</label>
+            <select
+              name="isActive"
+              value={String(form.isActive)}
+              onChange={(event) => setForm((current) => ({ ...current, isActive: event.target.value === "true" }))}
+              className="w-full rounded border p-2"
+            >
+              <option value="true">Active</option>
+              <option value="false">Inactive</option>
+            </select>
           </div>
 
           <div>

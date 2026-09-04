@@ -31,7 +31,7 @@ export default function AdminPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
-        <Link href="/admin/users" className="rounded border bg-white p-4 shadow-sm transition hover:border-blue-300">
+        <Link href="/admin/users" className="rounded border bg-white p-4 shadow-sm transition hover:border-blue-300 hover:bg-blue-100">
           <h2 className="mb-2 font-semibold">Users</h2>
           <p className="text-gray-600">Manage staff, teachers, students, and admins.</p>
         </Link>
