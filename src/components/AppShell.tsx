@@ -75,9 +75,21 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               Dashboard
             </Link> */}
 
+            {isAuthenticated && (
+              <Link href="/user" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800 hover:text-white">
+                My Account
+              </Link>
+            )}
+
             {hasRole("admin", "teacher") && (
               <Link href="/students" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800 hover:text-white">
                 Students
+              </Link>
+            )}
+
+            {hasRole("admin", "teacher") && (
+              <Link href="/admissions" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800 hover:text-white">
+                Admissions
               </Link>
             )}
 

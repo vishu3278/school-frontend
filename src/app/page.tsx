@@ -22,12 +22,12 @@ export default function Home() {
                 </Link>
               )}
               
-              {hasRole("teacher") && (
+              {hasRole("teacher") || hasRole("staff") && (
                 <Link
-                  href="/teacher"
+                  href="/user"
                   className="rounded bg-gray-200 px-4 py-2 text-gray-800"
                 >
-                  Teacher Route
+                  User info page
                 </Link>
               )}
             
@@ -64,13 +64,13 @@ export default function Home() {
                 </div>
               </>
             )}
-            {hasRole("staff") && (
+            {/* {hasRole("staff") && (
               <div className="text-center space-y-3">
                 <p className="text-gray-600">
                   Staff members can see their dashboard and manage assigned tasks.
                 </p>
                 </div>
-            )}
+            )} */}
             </div>
           ) : (
             <div className="text-center space-y-3">
