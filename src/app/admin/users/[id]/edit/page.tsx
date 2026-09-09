@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
 import { api } from "@/lib/api";
+import ToggleSwitch from "@/components/ui/ToggleSwitch";
 
 type UserForm = {
   firstName: string;
@@ -115,13 +116,16 @@ export default function EditUserPage() {
           <label className="mb-1 block font-medium">New password</label>
           <input name="password" type="password" value={form.password} onChange={handleChange} className="w-full rounded border p-2" placeholder="Leave blank to keep current" />
         </div>
-        <div>
-          <label className="mb-1 block font-medium">Status</label>
-          <select name="isActive" value={String(form.isActive)} onChange={(event) => setForm((current) => ({ ...current, isActive: event.target.value === "true" }))} className="w-full rounded border p-2">
-            <option value="true">Active</option>
-            <option value="false">Inactive</option>
-          </select>
-        </div>
+        <ToggleSwitch
+          name="isActive"
+          label="Status"
+          checked={form.isActive}
+          checkedLabel="Active"
+          uncheckedLabel="Inactive"
+          onCheckedChange={(isActive) =>
+            setForm((current) => ({ ...current, isActive }))
+          }
+        />
         <div className="md:col-span-2">
           <label className="mb-1 block font-medium">Address</label>
           <textarea name="address" value={form.address} onChange={handleChange} className="w-full rounded border p-2" rows={3} />

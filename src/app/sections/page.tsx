@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
+import ToggleSwitch from "@/components/ui/ToggleSwitch";
 
 type Grade = {
   id: string;
@@ -291,19 +292,19 @@ export default function SectionsPage() {
               />
             </div>
 
-            <label className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={assignmentForm.isClassTeacher}
-                onChange={(event) =>
-                  setAssignmentForm((current) => ({
-                    ...current,
-                    isClassTeacher: event.target.checked,
-                  }))
-                }
-              />
-              <span>Class teacher</span>
-            </label>
+            <ToggleSwitch
+              name="isClassTeacher"
+              label="Class teacher"
+              checked={assignmentForm.isClassTeacher}
+              checkedLabel="Yes"
+              uncheckedLabel="No"
+              onCheckedChange={(isClassTeacher) =>
+                setAssignmentForm((current) => ({
+                  ...current,
+                  isClassTeacher,
+                }))
+              }
+            />
 
             <button
               type="submit"

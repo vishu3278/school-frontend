@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
 import { api } from "@/lib/api";
+import ToggleSwitch from "@/components/ui/ToggleSwitch";
 
 type Grade = {
   id: string;
@@ -30,6 +31,10 @@ type StudentFormValues = {
   password: string;
   motherName: string;
   fatherName: string;
+  motherAadharNo: string;
+  fatherAadharNo: string;
+  motherOccupation: string;
+  fatherOccupation: string;
   aadharNo: string;
   religion: string;
   gradeId: string;
@@ -55,6 +60,10 @@ export default function EditStudentPage() {
     password: "",
     motherName: "",
     fatherName: "",
+    motherAadharNo: "",
+    fatherAadharNo: "",
+    motherOccupation: "",
+    fatherOccupation: "",
     aadharNo: "",
     religion: "",
     gradeId: "",
@@ -104,7 +113,7 @@ export default function EditStudentPage() {
 
       try {
         const [studentData, gradesData] = await Promise.all([
-          api<{ id: string; admissionNo: string; firstName: string; lastName: string; dateOfBirth?: string | null; gender?: string | null; phone?: string | null; phone2?: string | null; email?: string | null; address?: string | null; password?: string | null; motherName?: string | null; fatherName?: string | null; aadharNo?: string | null; religion?: string | null; isActive?: boolean; grade: Grade; section?: Section }>(`/students/${id}`),
+          api<{ id: string; admissionNo: string; firstName: string; lastName: string; dateOfBirth?: string | null; gender?: string | null; phone?: string | null; phone2?: string | null; email?: string | null; address?: string | null; password?: string | null; motherName?: string | null; fatherName?: string | null; motherAadharNo?: string | null; fatherAadharNo?: string | null; motherOccupation?: string | null; fatherOccupation?: string | null; aadharNo?: string | null; religion?: string | null; isActive?: boolean; grade: Grade; section?: Section }>(`/students/${id}`),
           api<Grade[]>("/grades"),
         ]);
 
@@ -122,6 +131,10 @@ export default function EditStudentPage() {
           password: studentData.password ?? "",
           motherName: studentData.motherName ?? "",
           fatherName: studentData.fatherName ?? "",
+          motherAadharNo: studentData.motherAadharNo ?? "",
+          fatherAadharNo: studentData.fatherAadharNo ?? "",
+          motherOccupation: studentData.motherOccupation ?? "",
+          fatherOccupation: studentData.fatherOccupation ?? "",
           aadharNo: studentData.aadharNo ?? "",
           religion: studentData.religion ?? "",
           gradeId: studentData.grade?.id ?? "",
@@ -241,7 +254,9 @@ export default function EditStudentPage() {
               disabled={!form.gradeId || sections.length === 0}
               className="w-full rounded border p-2 disabled:bg-gray-100"
             >
-              <option value="">{form.gradeId ? "Select Section" : "Select Grade first"}</option>
+              <option value="">
+                {form.gradeId ? "Select Section" : "Select Grade first"}
+              </option>
               {sections.map((section) => (
                 <option key={section.id} value={section.id}>
                   {section.name}
@@ -297,82 +312,6 @@ export default function EditStudentPage() {
               <option value="OTHER">Other</option>
             </select>
           </div>
-
-          <div>
-            <label className="mb-1 block font-medium">Phone</label>
-            <input
-              name="phone"
-              value={form.phone}
-              onChange={handleChange}
-              className="w-full rounded border p-2"
-            />
-          </div>
-
-          <div>
-            <label className="mb-1 block font-medium">Phone 2</label>
-            <input
-              name="phone2"
-              value={form.phone2}
-              onChange={handleChange}
-              className="w-full rounded border p-2"
-            />
-          </div>
-
-          <div>
-            <label className="mb-1 block font-medium">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              className="w-full rounded border p-2"
-            />
-          </div>
-
-          <div>
-            <label className="mb-1 block font-medium">Password</label>
-            <input
-              type="password"
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-              className="w-full rounded border p-2"
-            />
-          </div>
-
-          <div>
-            <label className="mb-1 block font-medium">Status</label>
-            <select
-              name="isActive"
-              value={String(form.isActive)}
-              onChange={(event) => setForm((current) => ({ ...current, isActive: event.target.value === "true" }))}
-              className="w-full rounded border p-2"
-            >
-              <option value="true">Active</option>
-              <option value="false">Inactive</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="mb-1 block font-medium">Mother's Name</label>
-            <input
-              name="motherName"
-              value={form.motherName}
-              onChange={handleChange}
-              className="w-full rounded border p-2"
-            />
-          </div>
-
-          <div>
-            <label className="mb-1 block font-medium">Father's Name</label>
-            <input
-              name="fatherName"
-              value={form.fatherName}
-              onChange={handleChange}
-              className="w-full rounded border p-2"
-            />
-          </div>
-
           <div>
             <label className="mb-1 block font-medium">Aadhar Number</label>
             <input
@@ -402,7 +341,128 @@ export default function EditStudentPage() {
             </select>
           </div>
         </div>
+        <h4 className="font-bold">Parent Information</h4>
+        <div className="grid gap-4 md:grid-cols-2">
+          <div>
+            <label className="mb-1 block font-medium">Mother's Name</label>
+            <input
+              name="motherName"
+              value={form.motherName}
+              onChange={handleChange}
+              className="w-full rounded border p-2"
+            />
+          </div>
 
+          <div>
+            <label className="mb-1 block font-medium">Father's Name</label>
+            <input
+              name="fatherName"
+              value={form.fatherName}
+              onChange={handleChange}
+              className="w-full rounded border p-2"
+            />
+          </div>
+          <div>
+            <label className="mb-1 block font-medium">Phone</label>
+            <input
+              name="phone"
+              value={form.phone}
+              onChange={handleChange}
+              className="w-full rounded border p-2"
+            />
+          </div>
+
+          <div>
+            <label className="mb-1 block font-medium">Phone 2</label>
+            <input
+              name="phone2"
+              value={form.phone2}
+              onChange={handleChange}
+              className="w-full rounded border p-2"
+            />
+          </div>
+
+          <div>
+            <label className="mb-1 block font-medium">Mother's Aadhaar</label>
+            <input
+              name="motherAadharNo"
+              value={form.motherAadharNo}
+              onChange={handleChange}
+              className="w-full rounded border p-2"
+            />
+          </div>
+
+          <div>
+            <label className="mb-1 block font-medium">Father's Aadhaar</label>
+            <input
+              name="fatherAadharNo"
+              value={form.fatherAadharNo}
+              onChange={handleChange}
+              className="w-full rounded border p-2"
+            />
+          </div>
+
+          <div>
+            <label className="mb-1 block font-medium">
+              Mother's Occupation
+            </label>
+            <input
+              name="motherOccupation"
+              value={form.motherOccupation}
+              onChange={handleChange}
+              className="w-full rounded border p-2"
+            />
+          </div>
+
+          <div>
+            <label className="mb-1 block font-medium">
+              Father's Occupation
+            </label>
+            <input
+              name="fatherOccupation"
+              value={form.fatherOccupation}
+              onChange={handleChange}
+              className="w-full rounded border p-2"
+            />
+          </div>
+        </div>
+
+        <h4 className="font-bold">Additional Information</h4>
+                <div className="grid gap-4 md:grid-cols-3">
+
+        <div>
+          <label className="mb-1 block font-medium">Email</label>
+          <input
+            type="email"
+            name="email"
+            value={form.email}
+            onChange={handleChange}
+            className="w-full rounded border p-2"
+          />
+        </div>
+
+        <div>
+          <label className="mb-1 block font-medium">Password</label>
+          <input
+            type="password"
+            name="password"
+            value={form.password}
+            onChange={handleChange}
+            className="w-full rounded border p-2"
+          />
+        </div>
+
+        <ToggleSwitch
+          name="isActive"
+          label="Status"
+          checked={form.isActive}
+          checkedLabel="Active"
+          uncheckedLabel="Inactive"
+          onCheckedChange={(isActive) =>
+            setForm((current) => ({ ...current, isActive }))
+          }
+        />
+</div>
         <div>
           <label className="mb-1 block font-medium">Address</label>
           <textarea
