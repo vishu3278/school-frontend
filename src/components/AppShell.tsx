@@ -94,6 +94,12 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             )}
 
             {hasRole("admin") && (
+              <Link href="/academic-years" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800 hover:text-white">
+                Academic Years
+              </Link>
+            )}
+
+            {hasRole("admin") && (
               <Link href="/grades" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800 hover:text-white">
                 Grades
               </Link>

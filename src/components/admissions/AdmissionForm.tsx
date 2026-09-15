@@ -1,9 +1,11 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import ToggleSwitch from "@/components/ui/ToggleSwitch";
+import AcademicYearSelect from "@/components/academic-years/AcademicYearSelect";
+import { useAcademicYears } from "@/lib/academic-years";
 
 type Grade = { id: string; name: string };
 export type AdmissionApplication = {
@@ -43,15 +45,6 @@ const nextStatuses: Record<string, string[]> = {
   WAITLISTED: ["APPROVED", "REJECTED"],
 };
 
-function academicYears() {
-  const now = new Date();
-  const startYear = now.getFullYear() - (now.getMonth() < 3 ? 1 : 0);
-  return [-2, -1, 0, 1].map((offset) => {
-    const year = startYear + offset;
-    return `${year}-${String(year + 1).slice(-2)}`;
-  });
-}
-
 export default function AdmissionForm({
   grades,
   application,
@@ -64,7 +57,7 @@ export default function AdmissionForm({
   canEdit?: boolean;
 }) {
   const router = useRouter();
-  const years = academicYears();
+  const { currentAcademicYear } = useAcademicYears();
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [form, setForm] = useState(() =>
@@ -117,7 +110,7 @@ export default function AdmissionForm({
           previousSchool: "",
           previousGrade: "",
           previousResult: "",
-          academicYear: years[2],
+          academicYear: "",
           requestedGradeId: "",
           status: "DRAFT",
           birthCertificateReceived: false,
@@ -126,6 +119,12 @@ export default function AdmissionForm({
           photosReceived: false,
         },
   );
+
+  useEffect(() => {
+    if (!application && !form.academicYear && currentAcademicYear) {
+      setForm((current) => ({ ...current, academicYear: currentAcademicYear.name }));
+    }
+  }, [application, currentAcademicYear, form.academicYear]);
 
   function change(
     event: React.ChangeEvent<
@@ -435,19 +434,11 @@ export default function AdmissionForm({
           <div className="grid gap-4 md:grid-cols-2">
             <label>
               Academic Year
-              <select
-                required
-                name="academicYear"
+              <AcademicYearSelect
                 value={form.academicYear}
-                onChange={change}
-                className={fieldClass}
-              >
-                {years.map((year) => (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
-                ))}
-              </select>
+                onChange={(academicYear) => setForm((current) => ({ ...current, academicYear }))}
+                required
+              />
             </label>
             <label>
               Requested Grade

@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { useAuth } from "@/lib/auth";
 import ToggleSwitch from "@/components/ui/ToggleSwitch";
+import AcademicYearSelect from "@/components/academic-years/AcademicYearSelect";
+import { useAcademicYears } from "@/lib/academic-years";
 
 type Grade = {
   id: string;
@@ -42,12 +44,13 @@ const emptySectionForm = {
 const emptyAssignmentForm = {
   sectionId: "",
   teacherId: "",
-  academicYear: "2026-2027",
+  academicYear: "",
   isClassTeacher: false,
 };
 
 export default function SectionsPage() {
   const { user, hasRole } = useAuth();
+  const { currentAcademicYear } = useAcademicYears();
   const [grades, setGrades] = useState<Grade[]>([]);
   const [sections, setSections] = useState<Section[]>([]);
   const [teachers, setTeachers] = useState<User[]>([]);
@@ -89,6 +92,12 @@ export default function SectionsPage() {
 
     loadData();
   }, [hasRole, user]);
+
+  useEffect(() => {
+    if (!assignmentForm.academicYear && currentAcademicYear) {
+      setAssignmentForm((current) => ({ ...current, academicYear: currentAcademicYear.name }));
+    }
+  }, [assignmentForm.academicYear, currentAcademicYear]);
 
   async function handleCreateSection(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -279,15 +288,14 @@ export default function SectionsPage() {
 
             <div>
               <label className="mb-1 block font-medium">Academic year</label>
-              <input
+              <AcademicYearSelect
                 value={assignmentForm.academicYear}
-                onChange={(event) =>
+                onChange={(academicYear) =>
                   setAssignmentForm((current) => ({
                     ...current,
-                    academicYear: event.target.value,
+                    academicYear,
                   }))
                 }
-                className="w-full rounded border p-2"
                 required
               />
             </div>
