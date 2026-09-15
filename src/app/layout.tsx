@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 
 import AppShell from "@/components/AppShell";
 import { AuthProvider } from "@/lib/auth";
+import { AcademicYearsProvider } from "@/lib/academic-years";
 
 import "./globals.css";
 
@@ -30,7 +31,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     >
       <body className="min-h-full bg-slate-100">
         <AuthProvider>
-          <AppShell>{children}</AppShell>
+          <AcademicYearsProvider>
+            <AppShell>{children}</AppShell>
+          </AcademicYearsProvider>
         </AuthProvider>
       </body>
     </html>
