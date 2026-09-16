@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-
+import { LayoutDashboard, UserRoundKey, UserRound, UserShield, UserRoundCheck, CalendarRange, GraduationCap, Section, BookOpen } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
@@ -37,7 +37,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             {user ? (
               <>
                 <div className="hidden text-right md:block">
-                  <p className="text-sm font-medium text-slate-700">{user.email}</p>
+                  <p className="text-sm font-medium text-slate-700">
+                    {user.email}
+                  </p>
                   <p className="text-xs uppercase tracking-wide text-slate-500">
                     {user.role}
                   </p>
@@ -67,68 +69,115 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
         <aside className="fixed left-0 top-16 flex h-[calc(100vh-4rem)] w-72 flex-col border-r border-slate-200 bg-slate-900 text-slate-100">
           <nav className="flex-1 space-y-1 p-4">
             {hasRole("admin") && (
-                <Link href="/admin" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800 hover:text-white">
-                  Dashboard
-                </Link>
+              <Link
+                href="/admin"
+                className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800 hover:text-white"
+              >
+                <LayoutDashboard />
+                Dashboard
+              </Link>
             )}
             {/* <Link href="/" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800 hover:text-white">
               Dashboard
             </Link> */}
 
             {isAuthenticated && (
-              <Link href="/user" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800 hover:text-white">
+              <Link
+                href="/user"
+                className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800 hover:text-white"
+              >
+                <UserRoundKey />
                 My Account
               </Link>
             )}
 
             {hasRole("admin", "teacher") && (
-              <Link href="/students" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800 hover:text-white">
+              <Link
+                href="/students"
+                className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800 hover:text-white"
+              >
+                <UserRoundCheck />
                 Students
               </Link>
             )}
 
             {hasRole("admin", "teacher") && (
-              <Link href="/admissions" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800 hover:text-white">
+              <Link
+                href="/admissions"
+                className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800 hover:text-white"
+              >
+                <UserShield />
                 Admissions
               </Link>
             )}
 
             {hasRole("admin") && (
-              <Link href="/academic-years" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800 hover:text-white">
+              <Link
+                href="/academic-years"
+                className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800 hover:text-white"
+              >
+                <CalendarRange />
                 Academic Years
               </Link>
             )}
 
             {hasRole("admin") && (
-              <Link href="/grades" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800 hover:text-white">
+              <Link
+                href="/grades"
+                className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800 hover:text-white"
+              >
+                <GraduationCap />
                 Grades
               </Link>
             )}
 
             {hasRole("admin") && (
-              <Link href="/sections" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800 hover:text-white">
+              <Link
+                href="/sections"
+                className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800 hover:text-white"
+              >
+                <Section />
                 Sections
               </Link>
             )}
 
             {hasRole("admin") && (
-              <Link href="/admin/users" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800 hover:text-white">
-                Users
+              <Link
+                href="/subjects"
+                className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800 hover:text-white"
+              >
+                <BookOpen />
+                Subjects
               </Link>
             )}
 
             {hasRole("admin") && (
-              <Link href="/admin" className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800 hover:text-white">
-                Admin
+              <Link
+                href="/admin/users"
+                className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800 hover:text-white"
+              >
+                <UserRound />
+                Users
               </Link>
             )}
+
+            {/* {hasRole("admin") && (
+              <Link
+                href="/admin"
+                className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800 hover:text-white"
+              >
+                Admin
+              </Link>
+            )} */}
           </nav>
 
           <div className="border-t border-slate-700 p-4 text-sm text-slate-300">
             {isAuthenticated ? (
               <div>
                 <p className="font-medium text-white">{user?.email}</p>
-                <p className="text-xs uppercase tracking-wide text-slate-400">{user?.role}</p>
+                <p className="text-xs uppercase tracking-wide text-slate-400">
+                  {user?.role}
+                </p>
               </div>
             ) : (
               <p>Sign in to continue</p>
