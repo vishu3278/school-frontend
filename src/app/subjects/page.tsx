@@ -283,7 +283,7 @@ export default function SubjectsPage() {
       {/* === Subject CRUD === */}
       <div className="grid grid-cols-4 gap-2 mb-8">
 
-      <div className="col-span-1 rounded-lg border bg-white p-4 ">
+      <div className="col-span-1 rounded-lg border bg-slate-50 p-4 ">
         <h2 className="mb-4 text-lg font-semibold">
           {editingId ? "Edit Subject" : "Add Subject"}
         </h2>
@@ -300,7 +300,7 @@ export default function SubjectsPage() {
                 setSubjectForm((f) => ({ ...f, name: e.target.value }))
               }
               placeholder="e.g. Mathematics"
-              className="w-full rounded border p-2"
+              className="w-full rounded bg-white border p-2"
               required
             />
           </div>
@@ -312,7 +312,7 @@ export default function SubjectsPage() {
                 setSubjectForm((f) => ({ ...f, code: e.target.value }))
               }
               placeholder="e.g. MATH101"
-              className="w-full rounded border p-2"
+              className="w-full rounded bg-white border p-2"
             />
           </div>
           {/* <label className="flex items-center gap-2 whitespace-nowrap pb-2">
