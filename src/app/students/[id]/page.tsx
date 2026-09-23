@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
 import { api } from "@/lib/api";
+import "../../print.css";
 
 type Grade = {
   id: string;
@@ -50,6 +51,49 @@ export default function StudentDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const SCHOOL_NAME = "Greenfield Public School";
+  const SCHOOL_TAGLINE = "Affiliated to CBSE";
+  const VALID_UPTO = "31-Mar-2027";
+
+  // Placeholder logo — swap this inline SVG for: <img src="your-logo.png" alt="logo">
+  /* function logoMarkup() {
+    return `
+      <div className="id-card__logo">
+        <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="20" cy="20" r="19" fill="#fff" opacity="0.15"/>
+          <text x="20" y="26" font-size="16" text-anchor="middle" fill="#fff" font-family="Arial" font-weight="bold">S</text>
+        </svg>
+      </div>`;
+  } */
+
+  function cardMarkup(s) {
+    return `
+      <div class="id-card__header">
+        
+        <div class="id-card__school-name">
+          ${SCHOOL_NAME}
+          <small>${SCHOOL_TAGLINE}</small>
+        </div>
+      </div>
+      <div class="id-card__body">
+        <div class="id-card__photo">Photo</div>
+        <div class="id-card__details">
+          <div class="id-card__name">${s.firstName} ${s.lastName} (${s.gender}) <span class="id-card__admission">DOB: ${s.dateOfBirth}</span></div>
+          <div class="id-card__row"><span class="k">Class</span><span class="v">${s.grade.name} - ${s.section.name}</span> <span class="k">Roll No</span><span class="v">${s.gender}</span></div>
+          /* <div class="id-card__row"><span class="k">Roll No</span><span class="v">${s.gender}</span></div> */
+          <div class="id-card__row"><span class="k">Adm No</span><span class="v">${s.admissionNo}</span></div>
+          <div class="id-card__row"><span class="k">DOB</span><span class="v">${s.dateOfBirth}</span></div>
+          <div class="id-card__row"><span class="k">Phone</span><span class="v">${s.phone}</span></div>
+        </div>
+      </div>
+      <div class="id-card__footer">
+        <div class="id-card__validity">Valid upto<br><strong>${VALID_UPTO}</strong></div>
+        <div class="id-card__signature">
+          <div class="line">Principal</div>
+        </div>
+      </div>`;
+  }
+
   useEffect(() => {
     if (!id) {
       setLoading(false);
@@ -63,6 +107,7 @@ export default function StudentDetailPage() {
 
         const data = await api<StudentDetail>(`/students/${id}`);
         setStudent(data);
+        // cardMarkup(data);
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "Failed to load student details",
@@ -133,7 +178,9 @@ export default function StudentDetailPage() {
 
         <div>
           <p className="text-sm text-gray-500">Section</p>
-          <p className="text-lg font-semibold">{student.section?.name || "-"}</p>
+          <p className="text-lg font-semibold">
+            {student.section?.name || "-"}
+          </p>
         </div>
 
         <div>
@@ -204,6 +251,17 @@ export default function StudentDetailPage() {
         <div className="md:col-span-2">
           <p className="text-sm text-gray-500">Address</p>
           <p>{student.address || "-"}</p>
+        </div>
+      </div>
+      <hr />
+      <div className="preview-wrap">
+        <div className="preview-scale">
+          {/* <div className="id-card" id="singleCard">${cardMarkup(student)}</div> */}
+          <div
+            className="id-card"
+            id="singleCard"
+            dangerouslySetInnerHTML={{ __html: cardMarkup(student) }}
+          />
         </div>
       </div>
     </main>

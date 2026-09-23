@@ -1,0 +1,146 @@
+:root {
+    --card-w: 88mm;
+    --card-h: 55mm;
+    --brand: #1e3a5f;
+    --brand-light: #e8eef5;
+  }
+
+  * { box-sizing: border-box; }
+/*  Single preview (as would sit on a student edit page)  */
+  .preview-wrap {
+    max-width: 900px; margin: 0 auto 32px;
+    background: #fff; border-radius: 8px; padding: 24px;
+    /* box-shadow: 0 1px 4px rgba(0,0,0,0.12); */
+    display: flex; justify-content: center;
+  }
+  .preview-scale {
+    transform: scale(2.4);
+    transform-origin: top center;
+    margin-bottom: 78mm; /* reserve visual space for the scaled-up card */
+  }
+
+    /*  The card itself — same markup used in preview & print  */
+  .id-card {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 8pt;
+    width: var(--card-w);
+    height: var(--card-h);
+    border: 1px solid #bdbdbd;
+    border-radius: 2mm;
+    overflow: hidden;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .id-card__header {
+    height: 12mm;
+    background: var(--brand);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2mm;
+    flex-shrink: 0;
+  }
+  /* Placeholder logo box — replace the SVG below with your real logo <img> tag.
+     Recommended source logo: transparent PNG/SVG, roughly 300x120px (5:2 ratio) */
+  .id-card__logo {
+    height: 8mm;
+    width: 8mm;
+    flex-shrink: 0;
+  }
+  .id-card__logo img { height: 100%; width: 100%; object-fit: contain; }
+  .id-card__school-name {
+    color: #fff;
+    font-size: 8pt;
+    font-weight: 700;
+    /* letter-spacing: .02em; */
+    text-align: center;
+    line-height: 1.1;
+  }
+  .id-card__school-name small {
+    display: block;
+    font-size: 5.5pt;
+    font-weight: 400;
+    opacity: .85;
+  }
+
+  .id-card__body {
+    flex: 1;
+    display: flex;
+    gap: 2.5mm;
+    padding: 2.5mm 3mm;
+  }
+  .id-card__photo {
+    width: 18mm;
+    height: 22mm;
+    border: 0.4mm solid var(--brand);
+    background: var(--brand-light);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5pt;
+    color: #8ea0b5;
+    overflow: hidden;
+  }
+  .id-card__photo img { width: 100%; height: 100%; object-fit: cover; }
+
+  .id-card__details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.8mm;
+    min-width: 0;
+  }
+  .id-card__name {
+    font-size: 8pt;
+    font-weight: 700;
+    color: #1a1a1a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .id-card__admission {
+    font-size: 7pt;
+    font-weight: normal;
+    margin-left: 16pt;
+  }
+  .id-card__row {
+    font-size: 6pt;
+    color: #444;
+    display: flex;
+    gap: 1mm;
+  }
+  .id-card__row .k { color: #888; min-width: 13mm; flex-shrink: 0; }
+  .id-card__row .v { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .id-card__footer {
+    height: 9mm;
+    border-top: 0.3mm solid #dbe2e9;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 3mm;
+    flex-shrink: 0;
+  }
+  .id-card__validity { font-size: 5pt; color: #888; }
+  .id-card__signature { font-size: 5pt; color: #888; text-align: right; }
+  .id-card__signature .line { border-top: 0.3mm solid #999; padding-top: 0.5mm; margin-top: 3mm; width: 18mm; }
+
+  /* ---------- Print sheet (A4, multiple cards) ---------- */
+  .print-sheet-wrap {
+    max-width: 900px; margin: 0 auto; background: #fff;
+    border-radius: 8px; padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+    overflow: auto;
+  }
+  .print-sheet {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1mm;
+    width: 198mm; /* A4 width (210mm) minus assumed 6mm side margins each */
+    margin: 0 auto;
+  }
