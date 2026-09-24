@@ -23,6 +23,7 @@ export default function StudentForm({ grades }: StudentFormProps) {
   const [sections, setSections] = useState<Section[]>([]);
   const [form, setForm] = useState({
     admissionNo: "",
+    rollNo: "",
     firstName: "",
     lastName: "",
     dateOfBirth: "",
@@ -122,6 +123,7 @@ export default function StudentForm({ grades }: StudentFormProps) {
       // Reset form
       setForm({
         admissionNo: "",
+        rollNo: "",
         firstName: "",
         lastName: "",
         dateOfBirth: "",
@@ -161,6 +163,17 @@ export default function StudentForm({ grades }: StudentFormProps) {
             readOnly
             placeholder="Auto-generated on save"
             className="w-full rounded border bg-gray-50 p-2 text-gray-700"
+          />
+        </div>
+
+        <div>
+          <label className="mb-1 block font-medium">Roll Number</label>
+
+          <input
+            name="rollNo"
+            value={form.rollNo}
+            onChange={handleChange}
+            className="w-full rounded border p-2"
           />
         </div>
 

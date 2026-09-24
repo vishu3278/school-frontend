@@ -20,6 +20,7 @@ type Section = {
 type StudentDetail = {
   id: string;
   admissionNo: string;
+  rollNo?: string | null;
   firstName: string;
   lastName: string;
   dateOfBirth?: string | null;
@@ -51,8 +52,8 @@ export default function StudentDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const SCHOOL_NAME = "Greenfield Public School";
-  const SCHOOL_TAGLINE = "Affiliated to CBSE";
+  const SCHOOL_NAME = "JD Modern School";
+  const SCHOOL_TAGLINE = "Nurturing Minds Shaping Future";
   const VALID_UPTO = "31-Mar-2027";
 
   // Placeholder logo — swap this inline SVG for: <img src="your-logo.png" alt="logo">
@@ -69,27 +70,32 @@ export default function StudentDetailPage() {
   function cardMarkup(s) {
     return `
       <div class="id-card__header">
-        
+        <div class="id-card__logo"><img src="/JD-Logo.jpg" /></div>
         <div class="id-card__school-name">
           ${SCHOOL_NAME}
           <small>${SCHOOL_TAGLINE}</small>
+          <address>A-659, Durga Chowk, Bhalswa Dairy, Delhi-110042</address>
         </div>
       </div>
       <div class="id-card__body">
         <div class="id-card__photo">Photo</div>
         <div class="id-card__details">
-          <div class="id-card__name">${s.firstName} ${s.lastName} (${s.gender}) <span class="id-card__admission">DOB: ${s.dateOfBirth}</span></div>
-          <div class="id-card__row"><span class="k">Class</span><span class="v">${s.grade.name} - ${s.section.name}</span> <span class="k">Roll No</span><span class="v">${s.gender}</span></div>
-          /* <div class="id-card__row"><span class="k">Roll No</span><span class="v">${s.gender}</span></div> */
+          <div class="id-card__name">${s.firstName} ${s.lastName} <span class="id-card__admission">(${s.gender})</span> <span class="id-card__admission">DOB: ${s.dateOfBirth}</span></div>
+          <div class="id-card__row"><span class="k">Class</span><span class="v">${s.grade.name} - ${s.section.name}</span> <span class="k">Roll No</span><span class="v">${s.rollNo || "-"}</span></div>
+          
           <div class="id-card__row"><span class="k">Adm No</span><span class="v">${s.admissionNo}</span></div>
-          <div class="id-card__row"><span class="k">DOB</span><span class="v">${s.dateOfBirth}</span></div>
+          <div class="id-card__row"><span class="k">Father</span><span class="v">${s.fatherName}</span></div>
+          <div class="id-card__row"><span class="k">Mother</span><span class="v">${s.motherName}</span></div>
+          <div class="id-card__row"><span class="k">Address</span><span class="v">${s.address}</span></div>
           <div class="id-card__row"><span class="k">Phone</span><span class="v">${s.phone}</span></div>
         </div>
       </div>
       <div class="id-card__footer">
-        <div class="id-card__validity">Valid upto<br><strong>${VALID_UPTO}</strong></div>
-        <div class="id-card__signature">
-          <div class="line">Principal</div>
+        <div class="id-card__signature">Guardian
+          <div class="line"></div>
+        </div>
+        <div class="id-card__signature">Principal
+          <div class="line"></div>
         </div>
       </div>`;
   }
@@ -156,6 +162,7 @@ export default function StudentDetailPage() {
         <div>
           <h1 className="text-2xl font-bold">Student Details</h1>
           <p className="text-gray-600">Admission No: {student.admissionNo}</p>
+          <p className="text-gray-600">Roll No: {student.rollNo || "-"}</p>
         </div>
 
         <Link href="/students" className="rounded bg-gray-200 px-4 py-2">
@@ -181,6 +188,11 @@ export default function StudentDetailPage() {
           <p className="text-lg font-semibold">
             {student.section?.name || "-"}
           </p>
+        </div>
+
+        <div>
+          <p className="text-sm text-gray-500">Roll No</p>
+          <p className="text-lg font-semibold">{student.rollNo || "-"}</p>
         </div>
 
         <div>
