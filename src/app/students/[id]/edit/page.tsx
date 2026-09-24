@@ -20,6 +20,7 @@ type Section = {
 
 type StudentFormValues = {
   admissionNo: string;
+  rollNo: string;
   firstName: string;
   lastName: string;
   dateOfBirth: string;
@@ -49,6 +50,7 @@ export default function EditStudentPage() {
 
   const [form, setForm] = useState<StudentFormValues>({
     admissionNo: "",
+    rollNo: "",
     firstName: "",
     lastName: "",
     dateOfBirth: "",
@@ -113,13 +115,14 @@ export default function EditStudentPage() {
 
       try {
         const [studentData, gradesData] = await Promise.all([
-          api<{ id: string; admissionNo: string; firstName: string; lastName: string; dateOfBirth?: string | null; gender?: string | null; phone?: string | null; phone2?: string | null; email?: string | null; address?: string | null; password?: string | null; motherName?: string | null; fatherName?: string | null; motherAadharNo?: string | null; fatherAadharNo?: string | null; motherOccupation?: string | null; fatherOccupation?: string | null; aadharNo?: string | null; religion?: string | null; isActive?: boolean; grade: Grade; section?: Section }>(`/students/${id}`),
+          api<{ id: string; admissionNo: string; rollNo?: string | null; firstName: string; lastName: string; dateOfBirth?: string | null; gender?: string | null; phone?: string | null; phone2?: string | null; email?: string | null; address?: string | null; password?: string | null; motherName?: string | null; fatherName?: string | null; motherAadharNo?: string | null; fatherAadharNo?: string | null; motherOccupation?: string | null; fatherOccupation?: string | null; aadharNo?: string | null; religion?: string | null; isActive?: boolean; grade: Grade; section?: Section }>(`/students/${id}`),
           api<Grade[]>("/grades"),
         ]);
 
         setGrades(gradesData);
         setForm({
           admissionNo: studentData.admissionNo,
+          rollNo: studentData.rollNo ?? "",
           firstName: studentData.firstName,
           lastName: studentData.lastName,
           dateOfBirth: studentData.dateOfBirth ?? "",
@@ -223,6 +226,16 @@ export default function EditStudentPage() {
               value={form.admissionNo}
               readOnly
               className="w-full rounded border bg-gray-50 p-2 text-gray-700"
+            />
+          </div>
+
+          <div>
+            <label className="mb-1 block font-medium">Roll Number</label>
+            <input
+              name="rollNo"
+              value={form.rollNo}
+              onChange={handleChange}
+              className="w-full rounded border p-2"
             />
           </div>
 

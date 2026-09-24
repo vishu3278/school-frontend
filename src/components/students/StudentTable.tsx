@@ -16,6 +16,7 @@ type Section = {
 export type Student = {
   id: string;
   admissionNo: string;
+  rollNo?: string | null;
   firstName: string;
   lastName: string;
   phone?: string | null;
@@ -41,6 +42,8 @@ export default function StudentTable({
           <tr>
             <th className="px-4 py-3">Admission No.</th>
 
+            <th className="px-4 py-3">Roll No.</th>
+
             <th className="px-4 py-3">Name</th>
 
             <th className="px-4 py-3">Grade</th>
@@ -59,6 +62,8 @@ export default function StudentTable({
           {students.map((student) => (
             <tr key={student.id} className="border-t">
               <td className="px-4 py-3">{student.admissionNo}</td>
+
+              <td className="px-4 py-3">{student.rollNo || "-"}</td>
 
               <td className="px-4 py-3">
                 {student.firstName} {student.lastName}
