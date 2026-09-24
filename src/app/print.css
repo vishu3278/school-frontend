@@ -1,7 +1,7 @@
 :root {
     --card-w: 88mm;
     --card-h: 55mm;
-    --brand: #1e3a5f;
+    --brand: #1f4a77;
     --brand-light: #e8eef5;
   }
 
@@ -14,7 +14,7 @@
     display: flex; justify-content: center;
   }
   .preview-scale {
-    transform: scale(2.4);
+    transform: scale(2);
     transform-origin: top center;
     margin-bottom: 78mm; /* reserve visual space for the scaled-up card */
   }

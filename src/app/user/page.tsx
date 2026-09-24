@@ -74,7 +74,7 @@ export default function UserPage() {
         <div className="mt-6 rounded-xl border border-red-200 bg-red-50 p-4 text-red-700">{error}</div>
       ) : (
         <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white ">
-          <div className="flex flex-col gap-4 bg-slate-50 p-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-4 bg-gradient-to-t from-slate-100 to-white p-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p className="text-sm text-slate-500">Signed in as</p>
               <p className="mt-1 text-lg font-semibold text-slate-900">{account.email ?? "Account"}</p>

@@ -86,7 +86,7 @@ export default function StudentDetailPage() {
           <div class="id-card__row"><span class="k">Adm No</span><span class="v">${s.admissionNo}</span></div>
           <div class="id-card__row"><span class="k">Father</span><span class="v">${s.fatherName}</span></div>
           <div class="id-card__row"><span class="k">Mother</span><span class="v">${s.motherName}</span></div>
-          <div class="id-card__row"><span class="k">Address</span><span class="v">${s.address}</span></div>
+          <div class="id-card__row"><span class="k">Address</span><span class="v">${s.address || '-' }</span></div>
           <div class="id-card__row"><span class="k">Phone</span><span class="v">${s.phone}</span></div>
         </div>
       </div>

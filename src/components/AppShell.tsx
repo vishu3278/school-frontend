@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { LayoutDashboard, UserRoundKey, UserRound, UserShield, UserRoundCheck, CalendarRange, GraduationCap, Section, BookOpen } from "lucide-react";
+import { LayoutDashboard, UserRoundKey, UserRound, UserShield, UserRoundCheck, CalendarRange, GraduationCap, Section, BookOpen, Wallet } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
@@ -148,6 +148,16 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               >
                 <BookOpen />
                 Subjects
+              </Link>
+            )}
+
+            {hasRole("admin") && (
+              <Link
+                href="/fees"
+                className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-200 transition hover:bg-slate-800 hover:text-white"
+              >
+                <Wallet />
+                Fees
               </Link>
             )}
 
