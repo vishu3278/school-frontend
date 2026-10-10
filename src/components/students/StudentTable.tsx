@@ -75,7 +75,9 @@ export default function StudentTable({
 
               <td className="px-4 py-3">{student.phone || "-"}</td>
 
-              <td className="px-4 py-3">{student.isActive ? "Active" : "Inactive"}</td>
+              <td className="px-4 py-3">
+                {student.isActive ? "Active" : "Inactive"}
+              </td>
 
               <td className="px-4 py-3">
                 <div className="flex gap-3">
@@ -88,15 +90,21 @@ export default function StudentTable({
                   {hasRole("admin") && (
                     <>
                       <Link
+                        href={`/students/${student.id}/fees`}
+                        className="text-emerald-700"
+                      >
+                        Fees
+                      </Link>
+                      <Link
                         href={`/students/${student.id}/edit`}
                         className="text-green-600"
-                        >
+                      >
                         Edit
                       </Link>
 
                       <button
-                      onClick={() => onDelete(student.id)}
-                      className="text-red-600"
+                        onClick={() => onDelete(student.id)}
+                        className="text-red-600"
                       >
                         Delete
                       </button>

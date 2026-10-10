@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
 import { api } from "@/lib/api";
+import { useAuth } from "@/lib/auth";
 import "../../print.css";
 
 type Grade = {
@@ -45,6 +46,7 @@ type StudentDetail = {
 };
 
 export default function StudentDetailPage() {
+  const { hasRole } = useAuth();
   const params = useParams<{ id: string }>();
   const id = params.id;
 
@@ -67,7 +69,7 @@ export default function StudentDetailPage() {
       </div>`;
   } */
 
-  function cardMarkup(s) {
+  function cardMarkup(s: StudentDetail) {
     return `
       <div class="id-card__header">
         <div class="id-card__logo"><img src="/JD-Logo.jpg" /></div>
@@ -81,12 +83,12 @@ export default function StudentDetailPage() {
         <div class="id-card__photo">Photo</div>
         <div class="id-card__details">
           <div class="id-card__name">${s.firstName} ${s.lastName} <span class="id-card__admission">(${s.gender})</span> <span class="id-card__admission">DOB: ${s.dateOfBirth}</span></div>
-          <div class="id-card__row"><span class="k">Class</span><span class="v">${s.grade.name} - ${s.section.name}</span> <span class="k">Roll No</span><span class="v">${s.rollNo || "-"}</span></div>
+          <div class="id-card__row"><span class="k">Class</span><span class="v">${s.grade.name} - ${s.section?.name || "-"}</span> <span class="k">Roll No</span><span class="v">${s.rollNo || "-"}</span></div>
           
           <div class="id-card__row"><span class="k">Adm No</span><span class="v">${s.admissionNo}</span></div>
           <div class="id-card__row"><span class="k">Father</span><span class="v">${s.fatherName}</span></div>
           <div class="id-card__row"><span class="k">Mother</span><span class="v">${s.motherName}</span></div>
-          <div class="id-card__row"><span class="k">Address</span><span class="v">${s.address || '-' }</span></div>
+          <div class="id-card__row"><span class="k">Address</span><span class="v">${s.address || "-"}</span></div>
           <div class="id-card__row"><span class="k">Phone</span><span class="v">${s.phone}</span></div>
         </div>
       </div>
@@ -165,9 +167,19 @@ export default function StudentDetailPage() {
           <p className="text-gray-600">Roll No: {student.rollNo || "-"}</p>
         </div>
 
-        <Link href="/students" className="rounded bg-gray-200 px-4 py-2">
-          Back
-        </Link>
+        <div className="flex gap-3">
+          {hasRole("admin") && (
+            <Link
+              href={`/students/${id}/fees`}
+              className="rounded bg-green-600 px-4 py-2 text-white"
+            >
+              Collect fees
+            </Link>
+          )}
+          <Link href="/students" className="rounded bg-gray-200 px-4 py-2">
+            Back
+          </Link>
+        </div>
       </div>
 
       <div className="grid gap-6 rounded border bg-white p-6 shadow-sm md:grid-cols-3">
