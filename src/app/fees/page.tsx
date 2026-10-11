@@ -15,6 +15,7 @@ type FeeCategory = {
   id: number;
   name: string;
   description: string | null;
+  code: "ADMISSION" | "TUITION" | null;
 };
 
 type FeeStructure = {
@@ -28,11 +29,12 @@ type FeeStructure = {
   amount: string;
   frequency: string;
   due_date: string | null;
+  due_day: number | null;
 };
 
 const FEE_FREQUENCIES = ["annual", "quarterly", "monthly", "one_time"];
 
-const emptyCategoryForm = { name: "", description: "" };
+const emptyCategoryForm = { name: "", description: "", code: "" };
 
 const emptyStructureForm = {
   gradeId: "",
@@ -41,6 +43,7 @@ const emptyStructureForm = {
   amount: "",
   frequency: "annual",
   dueDate: "",
+  dueDay: "",
 };
 
 export default function FeesPage() {
@@ -109,6 +112,7 @@ export default function FeesPage() {
       const payload = {
         name,
         description: categoryForm.description.trim() || null,
+        code: categoryForm.code || null,
       };
 
       if (editingCategoryId) {
@@ -156,6 +160,7 @@ export default function FeesPage() {
     setCategoryForm({
       name: category.name,
       description: category.description || "",
+      code: category.code || "",
     });
     setError("");
   }
@@ -186,6 +191,7 @@ export default function FeesPage() {
         amount: Number(structureForm.amount),
         frequency: structureForm.frequency,
         dueDate: structureForm.dueDate || null,
+        dueDay: structureForm.dueDay ? Number(structureForm.dueDay) : undefined,
       };
 
       if (editingStructureId) {
@@ -237,6 +243,7 @@ export default function FeesPage() {
       amount: String(Number(structure.amount)),
       frequency: structure.frequency,
       dueDate: structure.due_date || "",
+      dueDay: structure.due_day ? String(structure.due_day) : "",
     });
     setError("");
   }
@@ -301,6 +308,12 @@ export default function FeesPage() {
               className="w-full rounded border p-2"
             />
           </div>
+          <div className="flex-1">
+            <label className="mb-1 block font-medium">System type</label>
+            <select value={categoryForm.code} onChange={(event) => setCategoryForm((current) => ({ ...current, code: event.target.value }))} className="w-full rounded border p-2">
+              <option value="">General</option><option value="ADMISSION">Admission</option><option value="TUITION">Tuition</option>
+            </select>
+          </div>
 
           <div className="flex items-end gap-2">
             <button
@@ -335,14 +348,14 @@ export default function FeesPage() {
             <thead className="bg-slate-100">
               <tr>
                 <th className="p-3">Name</th>
-                <th className="p-3">Description</th>
+                <th className="p-3">Description</th><th className="p-3">Type</th>
                 <th className="p-3">Actions</th>
               </tr>
             </thead>
             <tbody>
               {categories.length === 0 ? (
                 <tr>
-                  <td colSpan={3} className="p-5 text-center text-slate-500">
+                  <td colSpan={4} className="p-5 text-center text-slate-500">
                     No fee categories yet.
                   </td>
                 </tr>
@@ -351,6 +364,7 @@ export default function FeesPage() {
                   <tr key={category.id} className="border-t">
                     <td className="p-3">{category.name}</td>
                     <td className="p-3">{category.description || "-"}</td>
+                    <td className="p-3">{category.code || "General"}</td>
                     <td className="p-3">
                       <div className="flex gap-3">
                         <button
@@ -503,6 +517,10 @@ export default function FeesPage() {
               className="w-full rounded border p-2"
             />
           </div>
+          <div>
+            <label className="mb-1 block font-medium">Monthly due day</label>
+            <input type="number" min="1" max="28" value={structureForm.dueDay} onChange={(event) => setStructureForm((current) => ({ ...current, dueDay: event.target.value }))} placeholder="1-28" className="w-full rounded border p-2" />
+          </div>
 
           <div className="flex items-end gap-2">
             <button
@@ -542,13 +560,14 @@ export default function FeesPage() {
                 <th className="p-3">Amount</th>
                 <th className="p-3">Frequency</th>
                 <th className="p-3">Due date</th>
+                <th className="p-3">Due day</th>
                 <th className="p-3">Actions</th>
               </tr>
             </thead>
             <tbody>
               {structures.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="p-5 text-center text-slate-500">
+                  <td colSpan={8} className="p-5 text-center text-slate-500">
                     No fee structures yet.
                   </td>
                 </tr>
@@ -563,6 +582,7 @@ export default function FeesPage() {
                     </td>
                     <td className="p-3">{structure.frequency}</td>
                     <td className="p-3">{structure.due_date || "-"}</td>
+                    <td className="p-3">{structure.due_day || "-"}</td>
                     <td className="p-3">
                       <div className="flex gap-3">
                         <button
