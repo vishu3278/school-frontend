@@ -1,12 +1,14 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
+import Link from "next/link";
 
 import { api } from "@/lib/api";
 
 type Invoice = {
   id: string;
   feeCategoryCode: string;
+  feeCategoryName?: string;
   amountDue: number;
   paidAmount: number;
   remainingAmount: number;
@@ -24,6 +26,14 @@ type Payment = {
   status: string;
   voidReason: string | null;
 };
+type AcademicYear = { id: number; name: string; isCurrent: boolean };
+type OtherFeeStructure = {
+  id: number;
+  categoryName: string;
+  amount: number;
+  frequency: string;
+  dueDate: string | null;
+};
 
 export default function StudentFeeCollection({
   studentId,
@@ -31,10 +41,17 @@ export default function StudentFeeCollection({
   studentId: string;
 }) {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [academicYears, setAcademicYears] = useState<AcademicYear[]>([]);
+  const [academicYearId, setAcademicYearId] = useState("");
+  const [otherStructures, setOtherStructures] = useState<OtherFeeStructure[]>([]);
+  const [otherStructureId, setOtherStructureId] = useState("");
+  const [otherDueDate, setOtherDueDate] = useState("");
   const [selected, setSelected] = useState<Invoice | null>(null);
   const [payments, setPayments] = useState<Payment[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [creatingOtherInvoice, setCreatingOtherInvoice] = useState(false);
   const [error, setError] = useState("");
   const [form, setForm] = useState({
     amount: "",
@@ -63,8 +80,84 @@ export default function StudentFeeCollection({
   }
 
   useEffect(() => {
-    void loadInvoices();
+    async function loadData() {
+      try {
+        const years = await api<AcademicYear[]>("/academic-years");
+        setAcademicYears(years);
+        setAcademicYearId(
+          String(
+            years.find((year) => year.isCurrent)?.id ?? years[0]?.id ?? "",
+          ),
+        );
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "Unable to load academic years",
+        );
+      }
+      await loadInvoices();
+    }
+    void loadData();
   }, [studentId]);
+
+  async function generateInvoices() {
+    if (!academicYearId) return;
+    setGenerating(true);
+    setError("");
+    try {
+      await api(`/fee-ledger/students/${studentId}/invoices`, {
+        method: "POST",
+        body: JSON.stringify({ academicYearId: Number(academicYearId) }),
+      });
+      await loadInvoices();
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Unable to generate fee invoices",
+      );
+    } finally {
+      setGenerating(false);
+    }
+  }
+
+  useEffect(() => {
+    async function loadOtherStructures() {
+      if (!academicYearId) return;
+      try {
+        const structures = await api<OtherFeeStructure[]>(
+          `/fee-ledger/students/${studentId}/other-fee-structures?academicYearId=${academicYearId}`,
+        );
+        setOtherStructures(structures);
+        setOtherStructureId(String(structures[0]?.id ?? ""));
+        setOtherDueDate(structures[0]?.dueDate ?? "");
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "Unable to load other fee options",
+        );
+      }
+    }
+    void loadOtherStructures();
+  }, [academicYearId, studentId]);
+
+  async function createOtherInvoice() {
+    if (!otherStructureId) return;
+    setCreatingOtherInvoice(true);
+    setError("");
+    try {
+      await api(`/fee-ledger/students/${studentId}/other-invoices`, {
+        method: "POST",
+        body: JSON.stringify({
+          feeStructureId: Number(otherStructureId),
+          dueDate: otherDueDate || undefined,
+        }),
+      });
+      await loadInvoices();
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Unable to create other fee invoice",
+      );
+    } finally {
+      setCreatingOtherInvoice(false);
+    }
+  }
 
   async function chooseInvoice(invoice: Invoice) {
     setSelected(invoice);
@@ -127,6 +220,90 @@ export default function StudentFeeCollection({
       {error && (
         <p className="mb-4 rounded bg-red-100 p-3 text-red-700">{error}</p>
       )}
+      <div className="mb-5 flex flex-wrap items-end gap-3 rounded border border-blue-100 bg-blue-50 p-4">
+        <div>
+          <label className="mb-1 block text-sm font-medium">
+            Academic year
+          </label>
+          <select
+            value={academicYearId}
+            onChange={(event) => setAcademicYearId(event.target.value)}
+            className="rounded border bg-white p-2"
+          >
+            {academicYears.map((year) => (
+              <option key={year.id} value={year.id}>
+                {year.name}
+                {year.isCurrent ? " (Current)" : ""}
+              </option>
+            ))}
+          </select>
+        </div>
+        <button
+          type="button"
+          disabled={!academicYearId || generating}
+          onClick={() => void generateInvoices()}
+          className="rounded bg-blue-600 px-4 py-2 text-white disabled:opacity-50"
+        >
+          {generating
+            ? "Generating..."
+            : "Generate admission & tuition invoices"}
+        </button>
+        <p className="max-w-xl text-sm text-slate-600">
+          Use this for existing students. It creates only missing invoices, so
+          it is safe to run again.
+        </p>
+        <Link
+          href="/fees"
+          className="text-sm font-medium text-blue-700 underline"
+        >
+          Configure fee structures
+        </Link>
+      </div>
+      <div className="mb-5 flex flex-wrap items-end gap-3 rounded border p-4">
+        <div>
+          <label className="mb-1 block text-sm font-medium">Other fee</label>
+          <select
+            value={otherStructureId}
+            onChange={(event) => {
+              const structure = otherStructures.find(
+                (item) => item.id === Number(event.target.value),
+              );
+              setOtherStructureId(event.target.value);
+              setOtherDueDate(structure?.dueDate ?? "");
+            }}
+            className="rounded border p-2"
+            disabled={!otherStructures.length}
+          >
+            {!otherStructures.length && <option>No other fee structures</option>}
+            {otherStructures.map((structure) => (
+              <option key={structure.id} value={structure.id}>
+                {structure.categoryName} — ₹{structure.amount}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="mb-1 block text-sm font-medium">Due date</label>
+          <input
+            type="date"
+            value={otherDueDate}
+            onChange={(event) => setOtherDueDate(event.target.value)}
+            className="rounded border p-2"
+          />
+        </div>
+        <button
+          type="button"
+          disabled={!otherStructureId || creatingOtherInvoice}
+          onClick={() => void createOtherInvoice()}
+          className="rounded bg-slate-700 px-4 py-2 text-white disabled:opacity-50"
+        >
+          {creatingOtherInvoice ? "Creating..." : "Create other fee invoice"}
+        </button>
+        <p className="max-w-xl text-sm text-slate-600">
+          Create an Examination, I-card, or other configured fee invoice for
+          this student.
+        </p>
+      </div>
       <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
         <div className="overflow-x-auto rounded border">
           <table className="w-full text-left text-sm">
@@ -148,7 +325,7 @@ export default function StudentFeeCollection({
                   className="cursor-pointer border-t hover:bg-slate-50"
                 >
                   <td className="p-3">
-                    {invoice.feeCategoryCode}
+                    {invoice.feeCategoryName ?? invoice.feeCategoryCode}
                     {invoice.billingPeriod
                       ? ` · ${invoice.billingPeriod.slice(0, 7)}`
                       : ""}
