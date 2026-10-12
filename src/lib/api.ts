@@ -5,7 +5,10 @@ export async function api<T>(
   endpoint: string,
   options?: RequestInit,
 ): Promise<T> {
-  const token = typeof window !== "undefined" ? localStorage.getItem(TOKEN_STORAGE_KEY) : null;
+  const token =
+    typeof window !== "undefined"
+      ? localStorage.getItem(TOKEN_STORAGE_KEY)
+      : null;
 
   const response = await fetch(`${API_URL}${endpoint}`, {
     ...options,
@@ -16,11 +19,13 @@ export async function api<T>(
     },
   });
 
+  const responseBody = await response.text();
+
   if (!response.ok) {
-    const message = await response.text();
+    const message = responseBody;
 
     throw new Error(message || "API request failed");
   }
 
-  return response.json();
+  return responseBody ? (JSON.parse(responseBody) as T) : (undefined as T);
 }

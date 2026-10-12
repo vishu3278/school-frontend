@@ -47,7 +47,7 @@ export default function AdminPage() {
         </Link>
 
         <Link
-          href="/fees"
+          href="/fee-ledger"
           className="rounded-lg border border-green-200 bg-gradient-to-t from-green-50 to-white p-4 transition hover:border-green-300 hover:shadow"
         >
           <h2 className="mb-2 font-semibold text-green-800">Fees</h2>
